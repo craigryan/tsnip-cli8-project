@@ -2,6 +2,14 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.0.1.
 
+## Run schematics on this project
+
+Link the schematics with `npm link tsnip-schematics` to link tsnip into ./node_modules
+
+Run the schematics with a service name (less the .ts extent) to generate specs and imports:
+
+    $ ng g tsnip-schematics:tsnip --name=myapi.service --force
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

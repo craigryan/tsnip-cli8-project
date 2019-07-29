@@ -2,14 +2,14 @@ import { Injectable, Inject } from '@angular/core';
 import {HttpClient, HttpParams, HttpErrorResponse} from '@angular/common/http';
 import {select} from '@angular-redux/store';
 
-import {Observable, of} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of, pipe} from 'rxjs';
+import {map, first} from 'rxjs/operators';
 
 import { Store } from '@ngrx/store';
 
 import {MyActions} from './my.actions';
-import {IMyState} from './my.store';
-import { getTotal } from './my.selectors';
+import {IMyState, MyForm} from './my.store';
+import { getMyForm } from './my.selectors';
 
 interface ApiResponse {
   stringValue: string
@@ -26,10 +26,11 @@ export class MyapiService {
 
   @select() readonly searchEnabled$: Observable<boolean>;
 
-  private ngrxTotal$ = this.store.select(getTotal);
+  private ngrxMyForm$: Observable<MyForm> = this.store.select(getMyForm);
 
   private apiUrl: string;
   searchEnabled: boolean;
+  total: number;
 
   constructor(
     private http: HttpClient,
@@ -65,7 +66,9 @@ export class MyapiService {
   public storeResult(result: string): void {
     const body: string = '{ flag: 1 }';
     this.http.post(this.url, body);
-    const someCalc = this.ngrxTotal$ + 10;
+    this.ngrxMyForm$.subscribe((myForm) => {
+      this.total = myForm.total + 10;
+    });
   }
 
   private get hasSecrets(): boolean {
@@ -78,8 +81,10 @@ export class MyapiService {
   }
 
   private searchEnabledSubscribe(): Observable<boolean> {
-    return this.searchEnabled$.first((enabled) => !!enabled).map(() => this.searchEnabled = true);
-  }
+    return this.searchEnabled$.pipe(
+      first((enabled) => !!enabled),
+      map(() => this.searchEnabled = true)
+    )}
 }
 
 /* showTree:

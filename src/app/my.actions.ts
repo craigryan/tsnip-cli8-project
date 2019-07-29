@@ -1,3 +1,5 @@
+import { Action } from '@ngrx/store';
+
 // Action class code
 export namespace MyActions {
   export enum Types {

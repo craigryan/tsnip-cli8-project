@@ -6,9 +6,9 @@ const getMyState = createFeatureSelector<IMyState>(
   'my'
 );
 
-export const getTotal = createSelector(
+export const getMyForm = createSelector(
   getMyState,
-  (state: MyForm): number => {
-    return state.total;
+  (state: IMyState): MyForm => {
+    return state.myForm;
   }
 );
